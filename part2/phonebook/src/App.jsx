@@ -8,6 +8,65 @@ const Person = ({ name, number }) => {
   );
 };
 
+const Filter = ({ handleChangeFilter }) => {
+  return (
+    <div>
+      filter shown with <input onChange={handleChangeFilter} type="text" />
+    </div>
+  );
+};
+
+const Persons = ({ filterText, persons }) => {
+  const filteredPersons = persons.filter((person) => {
+    return person.name.toLowerCase().includes(filterText.toLowerCase());
+  });
+
+  return (
+    <>
+      {filterText
+        ? filteredPersons.map((person) => (
+            <Person
+              key={person.name}
+              name={person.name}
+              number={person.number}
+            />
+          ))
+        : persons.map((person) => (
+            <Person
+              key={person.name}
+              name={person.name}
+              number={person.number}
+            />
+          ))}
+    </>
+  );
+};
+
+const PersonForm = ({
+  handleChangeName,
+  handleChangeNumber,
+  addName,
+  newName,
+  newNumber,
+}) => {
+  return (
+    <form>
+      <div>
+        name: <input onChange={handleChangeName} value={newName} />
+      </div>
+      <div>
+        number:{" "}
+        <input onChange={handleChangeNumber} value={newNumber} type="tel" />
+      </div>
+      <div>
+        <button onClick={addName} type="submit">
+          add
+        </button>
+      </div>
+    </form>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -50,46 +109,20 @@ const App = () => {
     setFilterText(e.target.value);
   };
 
-  const filteredPhonebook = persons.filter((person) => {
-    return person.name.toLowerCase().includes(filterText.toLowerCase());
-  });
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input onChange={handleChangeFilter} type="text" />
-      </div>
+      <Filter handleChangeFilter={handleChangeFilter} />
       <h2>Add a new</h2>
-      <form>
-        <div>
-          name: <input onChange={handleChangeName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleChangeNumber} type="tel" />
-        </div>
-        <div>
-          <button onClick={addName} type="submit">
-            add
-          </button>
-        </div>
-      </form>
+      <PersonForm
+        handleChangeName={handleChangeName}
+        handleChangeNumber={handleChangeNumber}
+        addName={addName}
+        newName={newName}
+        newNumber={newNumber}
+      />
       <h2>Numbers</h2>
-      {filterText
-        ? filteredPhonebook.map((person) => (
-            <Person
-              key={person.name}
-              name={person.name}
-              number={person.number}
-            />
-          ))
-        : persons.map((person) => (
-            <Person
-              key={person.name}
-              name={person.name}
-              number={person.number}
-            />
-          ))}
+      <Persons filterText={filterText} persons={persons} />
     </div>
   );
 };
