@@ -7,6 +7,11 @@ const App = () => {
   const addName = (e) => {
     e.preventDefault();
 
+    if (persons.filter(item => item.name === newName)) {
+      setNewName('')
+      return alert (`${newName} is already added to phonebook`)
+    }
+
     const personObject = {
       name: newName,
     };
